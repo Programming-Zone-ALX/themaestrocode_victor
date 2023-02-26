@@ -37,7 +37,6 @@ int main(void)
  */
 void mainMenu()
 {
-
     puts("MAIN MENU\n");
     puts("Select your prefered mode");
     puts("1. Simple calc                  2. Flex mode");
@@ -138,11 +137,14 @@ void simpleCalc()
  */
 void flexMode()
 {
-
     puts("FLEX MODE\n");
     puts("Calculate in flex mode");
 }
 
+/**
+ * operatorSelector - performs the basic arithmetic operations based on given operator
+ * Return: value
+*/
 double operatorSelection(char a, double x, double y)
 {
     double value;
@@ -182,52 +184,40 @@ double operatorSelection(char a, double x, double y)
 
 /**
  * addition - performs the + operation
- * @x: the value being added to. In the flexMode, the arguement is: current
- * @y: the value to be added to x. In the flexMode, the argument is: next
  * Return: sum
  */
 double addition(double x, double y)
 {
-
     double sum = x + y;
     return (sum);
 }
 
 /**
  * subtraction - performs the - operation
- * @x: the value being subtracted from. In the flexMode, the arguement is: current
- * @y: the value to be subtracted from x. In the flexMode, the argument is: next
  * Return: diff
  */
 double subtraction(double x, double y)
 {
-
     double diff = x - y;
     return (diff);
 }
 
 /**
  * multiplication - performs the * operation
- * @x: the value being multiplied. In the flexMode, the arguement is: current
- * @y: the value to be multiplied by x. In the flexMode, the argument is: next
  * Return: prod
  */
 double multiplication(double x, double y)
 {
-
     double prod = x * y;
     return (prod);
 }
 
 /**
  * division - performs the / operation
- * @x: the value being divided. In the flexMode, the arguement is: current
- * @y: the value x is being divided by. In the flexMode, the argument is: next
  * Return: div or x
  */
 double division(double x, double y)
 {
-
     if (y == 0)
     {
         puts("invalid expression!");
@@ -240,6 +230,10 @@ double division(double x, double y)
     }
 }
 
+/**
+ * modulo - finds the remainder of x%y
+ * Return: mod
+*/
 double modulo(double x, double y)
 {
     double mod = fmod(x, y);
@@ -251,26 +245,21 @@ double modulo(double x, double y)
  */
 void wrongInput()
 {
-
     puts("Invalid option/input! Try something else...\n");
 }
 
 /**
- * stars - prints astericks character to the display as a decorative divider
- * just for formatting and readability
+ * stars - prints astericks character to the display as a decorative divider just for formatting and readability
  */
 void stars()
 {
-
     puts("\n***********************************************************************************************\n");
 }
 
 /**
  * rmline - removes the new line character from the end of the string when the fgets method is used
- * @string: the String or text from which the ending new line is to be removed
  */
 void rmline(char string[])
 {
-
     string[strcspn(string, "\n")] = '\0';
 }
