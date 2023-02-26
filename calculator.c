@@ -1,18 +1,24 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <ctype.h>
+#include <math.h>
 
 void mainMenu();
+void simpleCalc();
 void flexMode();
+double operatorSelection(char, double, double);
 double addition(double, double);
 double subtraction(double, double);
 double multiplication(double, double);
 double division(double, double);
+double modulo(double, double);
 void wrongInput();
+void stars();
 void rmline(char *string);
 
 /**
- * main - Entry point of the calculator program
+ * main - Entry point to the calculator program
  * Return: 0 (success)
  */
 int main(void)
@@ -23,149 +29,248 @@ int main(void)
     mainMenu();
 
     return (0);
-    
 }
 
+/**
+ * mainMenu - contains the direction to all the program is about
+ * Users can chose a prefered calculation mode or find out about the functionality
+ */
 void mainMenu()
 {
 
     puts("MAIN MENU\n");
     puts("Select your prefered mode");
-    puts("1. Flex mode                    2. AI mode");
+    puts("1. Simple calc                  2. Flex mode");
     puts("3. Factorial of a number        4. Round up a number");
-    puts("0. About the program (find how each mode functions)");
-    puts("Q. Quit the program");
+    puts("5. AI mode");
+    puts("6. About the program (find out how each mode functions)");
+    puts("0. Quit the program");
 
     int opcode;
     scanf("%d", &opcode);
+    stars();
 
-    switch(opcode) {
+    switch (opcode)
+    {
 
-        case 1:
+    case 1:
+        simpleCalc();
+        break;
+
+    case 2:
         flexMode();
         break;
 
-        case 2:
-        //aiMode();
+    case 3:
+        // factorialMode();
         break;
 
-        case 3:
-        //factorialMode();
+    case 4:
+        // roundUpANumber();
         break;
 
-        case 4:
-        //roundUpANumber();
+    case 5:
+        // about();
         break;
 
-        default:
+    case 0:
+        puts("Application closed!");
+        break;
+
+    default:
         wrongInput();
         mainMenu();
     }
-
 }
 
-void flexMode() {
+void simpleCalc()
+{
+    puts("SIMPLE CALCULATION MODE\n");
+    puts("Perform simple calculation");
 
-    puts("FLEX MODE\n");
-    puts("Calculate in flex mode");
-
-    int i;
-    double figure1, figure2, current;
+    double current, next;
     char operator;
 
     printf("Figure: ");
-    scanf("%lf", &figure1);
+    scanf("%lf", &current);
+    printf("Operator: ");
+    getchar();
+    scanf("%c", &operator);
 
-    for (i = 0; i < 100; i++) {
-        
-        printf("Operator: ");
-        scanf(" %c", &operator);
-        printf("Figure: ");
-        scanf("%lf", &figure2);
+    if (operator == '(')
+    {
+        double next1, next2, innerCurrent;
+        char innerOperator1, innerOperator2;
 
-        switch(operator) {
+        printf("\tFigure: ");
+        scanf("%lf", &next1);
+        printf("\tOperator: ");
+        getchar();
+        scanf("%c", &innerOperator1);
+        printf("\tFigure: ");
+        scanf("%lf", &next2);
+        printf("\tOperator: ");
+        getchar();
+        scanf("%c", &innerOperator2);
 
-            case '+':
-            current = addition(figure1, figure2);
-            printf("\nAnswer: %lf\n", current);
-            figure1 = current;
-            break;
+        innerCurrent = operatorSelection(innerOperator1, next1, next2);
 
-            case '-':
-            current = subtraction(figure1, figure2);
-            printf("\nAnswer: %lf\n", current);
-            figure1 = current;
-            break;
-
-            case '*':
-            current = multiplication(figure1, figure2);
-            printf("\nAnswer: %lf\n", current);
-            figure1 = current;
-            break;
-
-            case '/':
-            current = division(figure1, figure2);
-            printf("\nAnswer: %lf\n", current);
-            figure1 = current;
-            break;
-
-            default:
-            wrongInput();
-            printf("\nYour final answer: %lf\n", current);
-            mainMenu();
-
+        if (innerOperator2 == ')')
+        {
+            current = operatorSelection('*', current, innerCurrent);
         }
-    }
 
+        printf("Answer: %lf", current);
+    }
+    else
+    {
+        printf("Figure: ");
+        scanf("%lf", &next);
+
+        current = operatorSelection(operator, current, next);
+        printf("Answer: %lf", current);
+    }
 }
 
+/**
+ * flexMode - allows the user to perform calculations in a loop format
+ * by specifying the operator and entering values continously
+ */
+void flexMode()
+{
 
-double addition(double x, double y) {
+    puts("FLEX MODE\n");
+    puts("Calculate in flex mode");
+}
+
+double operatorSelection(char a, double x, double y)
+{
+    double value;
+
+    switch (a)
+    {
+
+    case '+':
+        value = addition(x, y);
+        return (value);
+        break;
+
+    case '-':
+        value = subtraction(x, y);
+        return (value);
+        break;
+
+    case '*':
+        value = multiplication(x, y);
+        return (value);
+        break;
+
+    case '/':
+        value = division(x, y);
+        return (value);
+        break;
+
+    case '%':
+        value = modulo(x, y);
+        return (value);
+        break;
+
+    default:
+        printf("'%c' not a valid operator!\n", a);
+    }
+}
+
+/**
+ * addition - performs the + operation
+ * @x: the value being added to. In the flexMode, the arguement is: current
+ * @y: the value to be added to x. In the flexMode, the argument is: next
+ * Return: sum
+ */
+double addition(double x, double y)
+{
 
     double sum = x + y;
     return (sum);
 }
 
-
-double subtraction(double x, double y) {
+/**
+ * subtraction - performs the - operation
+ * @x: the value being subtracted from. In the flexMode, the arguement is: current
+ * @y: the value to be subtracted from x. In the flexMode, the argument is: next
+ * Return: diff
+ */
+double subtraction(double x, double y)
+{
 
     double diff = x - y;
     return (diff);
 }
 
-
-double multiplication(double x, double y) {
+/**
+ * multiplication - performs the * operation
+ * @x: the value being multiplied. In the flexMode, the arguement is: current
+ * @y: the value to be multiplied by x. In the flexMode, the argument is: next
+ * Return: prod
+ */
+double multiplication(double x, double y)
+{
 
     double prod = x * y;
     return (prod);
 }
 
+/**
+ * division - performs the / operation
+ * @x: the value being divided. In the flexMode, the arguement is: current
+ * @y: the value x is being divided by. In the flexMode, the argument is: next
+ * Return: div or x
+ */
+double division(double x, double y)
+{
 
-double division(double x, double y) {
-
-    if (y <= 0) {
-
+    if (y == 0)
+    {
         puts("invalid expression!");
         return (x);
     }
-    else {
-
+    else
+    {
         double div = x / y;
         return (div);
     }
 }
 
-void wrongInput() {
+double modulo(double x, double y)
+{
+    double mod = fmod(x, y);
+    return (mod);
+}
+
+/**
+ * wrongInput - tells the user that the input is not valid
+ */
+void wrongInput()
+{
 
     puts("Invalid option/input! Try something else...\n");
 }
 
 /**
+ * stars - prints astericks character to the display as a decorative divider
+ * just for formatting and readability
+ */
+void stars()
+{
+
+    puts("\n***********************************************************************************************\n");
+}
+
+/**
  * rmline - removes the new line character from the end of the string when the fgets method is used
  * @string: the String or text from which the ending new line is to be removed
-*/
-void rmline(char string[]) {
+ */
+void rmline(char string[])
+{
 
     string[strcspn(string, "\n")] = '\0';
 }
-
